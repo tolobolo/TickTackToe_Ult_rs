@@ -23,17 +23,9 @@ impl UltTickTackToe {
         for i in 0..9 {
             board.push(i.to_string().chars().nth(0).unwrap());
         }
-        let mut symbol: char = 'O';
+        let symbol: char = 'O';
 
         Self { board, symbol }
-    }
-
-    fn reset(&mut self) {
-        let mut board: Vec<char> = Vec::new();
-        for i in 0..9 {
-            board.push(i.to_string().chars().nth(0).unwrap());
-        }
-        let mut symbol: char = 'O';
     }
 
     fn choice_symbol(&mut self) {
@@ -64,12 +56,46 @@ impl UltTickTackToe {
         self.board[idx] = self.symbol
     }
 
-    fn steps(&mut self) {
-        self.reset();
+    fn win(&self){
+        println!("{} has won", self.symbol);
+        self.print_board();
+    }
 
-        self.choice_symbol();
-        self.print_board();
-        self.place_on_board();
-        self.print_board();
+    fn three_in_row(&self) -> bool {
+
+
+        if self.board[0] == self.symbol &&
+                        self.board[4] == self.symbol &&
+                        self.board[8] == self.symbol ||
+                        self.board[2] == self.symbol &&
+                                self.board[4] == self.symbol &&
+                                self.board[6] == self.symbol {
+                                    self.win();
+                                    return true
+                                }
+
+
+        for i in 0..3 {
+            println!("{}", i);
+            if  self.board[i] == self.symbol &&
+                self.board[i+3] == self.symbol &&
+                self.board[i+6] == self.symbol {
+                    self.win();
+                    return true
+                }
+        }
+
+
+        false
+    }
+
+
+    fn steps(&mut self) {
+
+        while self.three_in_row() == false {
+            self.choice_symbol();
+            self.print_board();
+            self.place_on_board();
+        }
     }
 }
