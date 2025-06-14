@@ -1,6 +1,15 @@
 fn main() {
     let mut game = UltTickTackToe::new();
-    game.steps()
+    loop {
+        if game.three_in_row() {
+            game.win();
+            return;
+        } else {
+            game.choice_symbol();
+            game.print_board();
+            game.place_on_board();
+        }
+    }
 }
 
 fn input(message: &str) -> char {
@@ -40,7 +49,7 @@ impl UltTickTackToe {
 
     fn print_board(&self) {
         for (index, i) in self.board.iter().enumerate() {
-            print!("|{} ", i);
+            print!("{} ", i);
             if (index + 1) % 3 == 0 {
                 println!();
             }
@@ -56,46 +65,42 @@ impl UltTickTackToe {
         self.board[idx] = self.symbol
     }
 
-    fn win(&self){
+    fn win(&self) {
         println!("{} has won", self.symbol);
         self.print_board();
     }
 
     fn three_in_row(&self) -> bool {
-
-
-        if self.board[0] == self.symbol &&
-                        self.board[4] == self.symbol &&
-                        self.board[8] == self.symbol ||
-                        self.board[2] == self.symbol &&
-                                self.board[4] == self.symbol &&
-                                self.board[6] == self.symbol {
-                                    self.win();
-                                    return true
-                                }
-
-
-        for i in 0..3 {
-            println!("{}", i);
-            if  self.board[i] == self.symbol &&
-                self.board[i+3] == self.symbol &&
-                self.board[i+6] == self.symbol {
-                    self.win();
-                    return true
-                }
+        //check diagonal
+        if self.board[0] == self.symbol
+            && self.board[4] == self.symbol
+            && self.board[8] == self.symbol
+            || self.board[2] == self.symbol
+                && self.board[4] == self.symbol
+                && self.board[6] == self.symbol
+        {
+            return true;
         }
-
+        //check loddrett
+        for i in 0..3 {
+            if self.board[i] == self.symbol
+                && self.board[i + 3] == self.symbol
+                && self.board[i + 6] == self.symbol
+            {
+                return true;
+            }
+        }
+        //check vannrett
+        for i in 0..3 {
+            if self.board[i] == self.symbol
+                && self.board[i + 1] == self.symbol
+                && self.board[i + 2] == self.symbol
+            {
+                self.win();
+                return true;
+            }
+        }
 
         false
-    }
-
-
-    fn steps(&mut self) {
-
-        while self.three_in_row() == false {
-            self.choice_symbol();
-            self.print_board();
-            self.place_on_board();
-        }
     }
 }
