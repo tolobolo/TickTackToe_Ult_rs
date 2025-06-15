@@ -12,21 +12,41 @@ fn main() {
     }
 }
 
-fn input(message: &str) -> char {
-    println!("{}", message);
-    let mut input = String::new();
-    std::io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read line");
-    input.trim().to_string().chars().nth(0).unwrap()
-}
-
 struct UltTickTackToe {
     board: Vec<char>,
     symbol: char,
 }
 
 impl UltTickTackToe {
+    fn input(&self, message: &str) -> char {
+        let mut input = String::new();
+
+        loop {
+            println!("{}", message);
+            input.clear();
+
+            std::io::stdin()
+                .read_line(&mut input)
+                .expect("Failed to read line");
+
+            match input.trim().chars().next() {
+                Some(c) => {
+                    if self.board.contains(&c) {
+                        return c;
+                    } else {
+                        println!(
+                            "Invalid input. The character '{}' is already on the board or not allowed.",
+                            c
+                        );
+                    }
+                }
+                None => {
+                    println!("Invalid input. Please enter a single character.");
+                }
+            }
+        }
+    }
+
     fn new() -> Self {
         let mut board: Vec<char> = Vec::new();
         for i in 0..9 {
@@ -57,8 +77,8 @@ impl UltTickTackToe {
         println!()
     }
     fn place_on_board(&mut self) {
-        let var = input("where do you want to place your (write the number it is on)");
-        let idx = var
+        let input = self.input("where do you want to place your (write the number it is on)");
+        let idx = input
             .to_string()
             .parse::<usize>()
             .expect("Failed to read line");
@@ -96,7 +116,6 @@ impl UltTickTackToe {
                 && self.board[i + 1] == self.symbol
                 && self.board[i + 2] == self.symbol
             {
-                self.win();
                 return true;
             }
         }
