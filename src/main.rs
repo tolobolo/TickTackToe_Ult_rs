@@ -90,7 +90,7 @@ impl UltTickTackToe {
         self.print_board();
     }
 
-    fn three_in_row(&self) -> bool {
+    fn three_in_row(&mut self) -> bool {
         //check diagonal
         if self.board[0] == self.symbol
             && self.board[4] == self.symbol
@@ -118,6 +118,10 @@ impl UltTickTackToe {
             {
                 return true;
             }
+        }
+        if self.board[0..9].iter().all(|x| *x == 'X' || *x == 'O') {
+            self.symbol = 'N';
+            return true;
         }
 
         false
